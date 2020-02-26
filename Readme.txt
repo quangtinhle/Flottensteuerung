@@ -1,1 +1,1 @@
-Es handelt sich um ein Beispielprojekt für die Veranstaltung "Modellbasierte Softwareentwicklung" an der Fachhochschule Dortmund.
+Es handelt sich um ein Projekt für die Veranstaltung "Modellbasierte Softwareentwicklung" an der Fachhochschule Dortmund.
