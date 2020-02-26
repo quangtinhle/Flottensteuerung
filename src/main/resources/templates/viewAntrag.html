@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header"></head>
+
+<body>
+	<div th:if="${#httpServletRequest.remoteUser == null}">
+		Sie sind nicht angemeldet. Bitte melden Sie sich an. <a th:href="@{/login}">Login</a>
+	</div>
+
+	<div th:if="${#httpServletRequest.remoteUser != null}">
+		<div class="container-fluid">
+		<nav th:replace="fragments/navigation :: navigation"></nav>
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+				<div id="jsGrid" class="jsgrid">
+				</div>
+				
+				<script type="text/javascript" th:inline="javascript">
+				$(function() {
+					
+					var alleFahrzeuge = /*[[${alleFahrzeuge}]]*/ [];
+					var alleBenutzer = /*[[${alleBenutzer}]]*/ [];
+					
+					var setControlData = function(subject) {
+				        $("#istBearbeitet").prop("checked", subject.istBearbeitet);
+				        $("#istFreigegeben").prop("checked", subject.istFreigegeben);					
+				        $("#kilometer").val(subject.kilometer);
+				        $("#ziel").val(subject.ziel);			        
+				        if (subject.flottenchef != null) {
+				        	$("#flottenchef").val(subject.flottenchef.id);
+				        }
+				        if (subject.antragsteller != null) {
+				        	$("#antragsteller").val(subject.antragsteller.id);
+				        }
+				        if (subject.wunschFahrzeug != null) {
+				        	$("#wunschFahrzeug").val(subject.wunschFahrzeug.id);
+				        }
+					};
+					
+					var getControlData = function(subject) {
+				        $.extend(subject, {
+				        	istBearbeitet: $("#istBearbeitet").is(":checked"),
+				        	istFreigegeben: $("#istFreigegeben").is(":checked"),
+				        	kilometer: $("#kilometer").val(),
+				        	ziel: $("#ziel").val(),
+				        	flottenchef: alleBenutzer.find(x => x.id == $("#flottenchef").val()),
+				        	antragsteller: alleBenutzer.find(x => x.id == $("#antragsteller").val()),
+				        	wunschFahrzeug: alleFahrzeuge.find(x => x.id == $("#wunschFahrzeug").val()),
+				        });
+					};
+					
+					var crudController = new CRUDController("/antraege", [{name: "id", title: "Id", type:"number"},
+	        			{name: "istBearbeitet", title: "Ist Bearbeiter", type:"checkbox"},
+	        			{name: "istFreigegeben", title: "Ist Freigegeben", type:"checkbox"},
+	        			{name: "kilometer", title: "Kilometer", type:"number"},
+	        			{name: "ziel", title: "Ziel", type:"text"},
+	        			{name: "flottenchef.id", title:"Flottenchef", type:"select", items: alleBenutzer, valueField:"id", textField:"login", uiRef: "flottenchef"},
+	        			{name: "antragsteller.id", title:"Antragsteller", type:"select", items: alleBenutzer, valueField:"id", textField:"login", uiRef: "antragsteller"},
+	        			{name: "wunschFahrzeug.id", title:"Wunschfahrzeug", type:"select", items: alleFahrzeuge, valueField:"id", textField:"kennzeichen", uiRef: "wunschFahrzeug"}],
+	        			setControlData, getControlData);
+				});
+				</script>
+				
+				<div id="detailsDialog">
+				    <form id="detailsForm" >
+				        <div class="details-form-field">
+				            <label for=istBearbeitet>Ist bearbeitet</label>
+				            <input id="istBearbeitet" name="istBearbeitet" type="checkbox"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="istFreigegeben">Ist freigegeben</label>
+				            <input id="istFreigegeben" name="istFreigegeben" type="checkbox"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="kilometer">Kilometer</label>
+				            <input id="kilometer" name="kilometer" type="number"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="ziel">Ziel</label>
+				            <input id="ziel" name="ziel" type="text"/>
+				        </div>			        
+				        <div class="details-form-field">
+				            <label for="flottenchef">Flottenchef</label>
+				            <select id="flottenchef" name="flottenchef" type="checkbox">
+				            </select>
+				        </div>
+						<div class="details-form-field">
+				            <label for="antragsteller">Antragsteller</label>
+				            <select id="antragsteller" name="antragsteller" type="checkbox">
+				            </select>
+				        </div>				        
+						<div class="details-form-field">
+				            <label for="wunschFahrzeug">Wunschfahrzeug</label>
+				            <select id="wunschFahrzeug" name="wunschFahrzeug" type="checkbox">
+				            </select>
+				        </div>				        
+				    </form>						
+				</div>			
+			</main>
+		</div>
+	</div>
+</body>
+</html>

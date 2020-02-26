@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header"></head>
+
+<body>
+	<div th:if="${#httpServletRequest.remoteUser == null}">
+		Sie sind nicht angemeldet. Bitte melden Sie sich an. <a th:href="@{/login}">Login</a>
+	</div>
+
+	<div th:if="${#httpServletRequest.remoteUser != null}">
+		<div class="container-fluid">
+		<nav th:replace="fragments/navigation :: navigation"></nav>
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+				<div id="jsGrid" class="jsgrid">
+				</div>
+				
+				<script type="text/javascript">
+				$(function() {
+					var setControlData = function(subject) {
+				        $("#name").val(subject.name);
+					};
+					
+					var getControlData = function(subject) {
+				        $.extend(subject, {
+				            name: $("#name").val(),
+				        });
+					};
+					
+					var crudController = new CRUDController("/hersteller", [{name: "id", title: "Id", type:"number"},
+	        			{name: "name", title: "Name", type:"text"}],
+	        			setControlData, getControlData);
+				});
+				</script>
+				
+				<div id="detailsDialog">
+				    <form id="detailsForm" >
+				        <div class="details-form-field">
+				            <label for="name">Name</label>
+				            <input id="name" name="name" type="text"/>
+				        </div>
+				    </form>						
+				</div>			
+			</main>
+		</div>
+	</div>
+</body>
+</html>

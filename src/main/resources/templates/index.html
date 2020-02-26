@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header"></head>
+
+<body>
+	<div th:if="${#httpServletRequest.remoteUser == null}">
+		Sie sind nicht angemeldet. Bitte melden Sie sich an. <a th:href="@{/login}">Login</a>
+	</div>
+	<div th:if="${#httpServletRequest.remoteUser != null}">
+		<div class="container-fluid">
+		<nav th:replace="fragments/navigation :: navigation"></nav>
+	
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+				<h1>Flottenmanagement</h1>
+				<p>Herzlich willkommen zum Flottenmanagement 2.0</p>
+			</main>
+		</div>
+	</div>
+</body>
+</html>

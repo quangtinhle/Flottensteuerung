@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header"></head>
+
+<body>
+	<div th:if="${#httpServletRequest.remoteUser == null}">
+		Sie sind nicht angemeldet. Bitte melden Sie sich an. <a th:href="@{/login}">Login</a>
+	</div>
+
+	<div th:if="${#httpServletRequest.remoteUser != null}">
+		<div class="container-fluid">
+		<nav th:replace="fragments/navigation :: navigation"></nav>
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+				<div id="jsGrid" class="jsgrid">
+				</div>
+				
+				<script type="text/javascript">
+				$(function() {
+					var setControlData = function(subject) {
+				        $("#login").val(subject.login);
+				        $("#nachname").val(subject.nachname);
+				        $("#vorname").val(subject.vorname);
+				        $("#passwort").val(subject.passwort);
+				        $("#istAntragsteller").prop("checked", subject.istAntragsteller);
+				        $("#istFlottenchef").prop("checked", subject.istFlottenchef);					
+					};
+					
+					var getControlData = function(subject) {
+				        $.extend(subject, {
+				            login: $("#login").val(),
+				            nachname: $("#nachname").val(),
+				            vorname: $("#vorname").val(),
+				            passwort: $("#passwort").val(),
+				            istAntragsteller: $("#istAntragsteller").is(":checked"),
+				            istFlottenchef: $("#istFlottenchef").is(":checked"),
+				        });
+					};
+					
+					var crudController = new CRUDController("/benutzer", [{name: "id", title: "Id", type:"number"},
+	        			{name: "login", title: "Login", type:"text"},
+	        			{name: "nachname", title: "Nachname", type:"text"},
+	        			{name: "vorname", title: "Vorname", type:"text"},
+	        			{name: "istAntragsteller", title:"Ist Antragsteller", type:"checkbox"},
+	        			{name: "istFlottenchef", title:"Ist Flottenchef", type:"checkbox"}],
+	        			setControlData, getControlData);
+				});
+				</script>
+				
+				<div id="detailsDialog">
+				    <form id="detailsForm" >
+				        <div class="details-form-field">
+				            <label for="login">Login</label>
+				            <input id="login" name="login" type="text"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="nachname">Nachname</label>
+				            <input id="nachname" name="nachname" type="text"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="vorname">Vorname</label>
+				            <input id="vorname" name="vorname" type="text"/>
+				        </div>
+						<div class="details-form-field">
+				            <label for="passwort">Passwort</label>
+				            <input id="passwort" name="passwort" type="password"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="istAntragsteller">Ist Antragsteller</label>
+				            <input id="istAntragsteller" name="istAntragsteller" type="checkbox"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="istFlottenchef">Ist Flottenchef</label>
+				            <input id="istFlottenchef" name="istFlottenchef" type="checkbox"/>
+				        </div>
+				    </form>						
+				</div>			
+			</main>
+		</div>
+	</div>
+</body>
+</html>

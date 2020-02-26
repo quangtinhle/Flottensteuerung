@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header"></head>
+
+<body>
+	<div th:if="${#httpServletRequest.remoteUser == null}">
+		Sie sind nicht angemeldet. Bitte melden Sie sich an. <a th:href="@{/login}">Login</a>
+	</div>
+
+	<div th:if="${#httpServletRequest.remoteUser != null}">
+		<div class="container-fluid">
+		<nav th:replace="fragments/navigation :: navigation"></nav>
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+				<div id="jsGrid" class="jsgrid">
+				</div>
+				
+				<script type="text/javascript" th:inline="javascript">
+				$(function() {
+					
+					var alleHersteller = /*[[${alleHersteller}]]*/ [];
+					var alleBenutzer = /*[[${alleBenutzer}]]*/ [];
+									
+					var setControlData = function(subject) {
+				        $("#fahrgestellnummer").val(subject.fahrgestellnummer);
+				        $("#kennzeichen").val(subject.kennzeichen);
+				        $("#kostenJeKilometer").val(subject.kostenJeKilometer);
+				        $("#typbezeichnung").val(subject.typbezeichnung);
+				        if (subject.flottenchef != null) {
+				        	$("#flottenchef").val(subject.flottenchef.id);
+				        }
+				        if (subject.hersteller != null) {
+				        	$("#hersteller").val(subject.hersteller.id);
+				        }
+					};
+					
+					var getControlData = function(subject) {
+				        $.extend(subject, {
+				        	fahrgestellnummer: $("#fahrgestellnummer").val(),
+				        	kennzeichen: $("#kennzeichen").val(),
+				        	kostenJeKilometer: $("#kostenJeKilometer").val(),
+				        	typbezeichnung: $("#typbezeichnung").val(),
+				        	flottenchef: alleBenutzer.find(x => x.id == $("#flottenchef").val()),
+				            hersteller: alleHersteller.find(x => x.id == $("#hersteller").val()),
+				        });
+					};
+					
+					
+					var crudController = new CRUDController("/fahrzeuge", [{name: "id", title: "Id", type:"number"},
+	        			{name: "fahrgestellnummer", title: "Fahrgestellnummer", type:"text"},
+	        			{name: "kennzeichen", title: "Kennzeichen", type:"text"},
+	        			{name: "kostenJeKilometer", title: "Kosten pro Kilometer", type:"number"},
+	        			{name: "typbezeichnung", title:"Typbezeichnung", type:"text"},
+	        			{name: "flottenchef.id", title:"Flottenchef", type:"select", items: alleBenutzer, valueField:"id", textField:"login", uiRef: "flottenchef"},
+	        			{name: "hersteller.id", title:"Hersteller", type:"select", items: alleHersteller, valueField:"id", textField:"name", uiRef: "hersteller"}],
+	        			setControlData, getControlData);
+				});
+				</script>
+				
+				<div id="detailsDialog">
+				    <form id="detailsForm" >
+				        <div class="details-form-field">
+				            <label for="fahrgestellnummer">Fahrgestellnummer</label>
+				            <input id="fahrgestellnummer" name="fahrgestellnummer" type="text"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="kennzeichen">Kennzeichen</label>
+				            <input id="kennzeichen" name="kennzeichen" type="text"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="kostenJeKilometer">Kosten pro Kilometer</label>
+				            <input id="kostenJeKilometer" name="kostenJeKilometer" type="number"/>
+				        </div>
+						<div class="details-form-field">
+				            <label for="typbezeichnung">Typbezeichnung</label>
+				            <input id="typbezeichnung" name="typbezeichnung" type="text"/>
+				        </div>
+				        <div class="details-form-field">
+				            <label for="flottenchef">Flottenchef</label>
+				            <select id="flottenchef" name="flottenchef" type="checkbox">
+				            </select>
+				        </div>
+						<div class="details-form-field">
+				            <label for="hersteller">Hersteller</label>
+				            <select id="hersteller" name="hersteller" type="checkbox">
+				            </select>
+				        </div>
+				    </form>						
+				</div>			
+			</main>
+		</div>
+	</div>
+</body>
+</html>
