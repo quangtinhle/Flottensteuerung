@@ -1,1 +1,1 @@
-Es handelt sich um ein Beispielprojekt für die Veranstaltung "Modellgetriebene und generative Softwareentwicklung" an der Fachhochschule Südwestfalen.
+Es handelt sich um ein Beispielprojekt fÃ¼r die Veranstaltung "Modellgetriebene und generative Softwareentwicklung" an der Fachhochschule Dortmund.
